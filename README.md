@@ -16,6 +16,8 @@
   - [ ] coordinate transformation
   - [ ] distance calculation
 - [ ]  action on social distancing detection
+   - [ ] send email
+   - [ ] make tcp call to wifi module 
 - [ ]  create settings.json and read from that
 - [ ]  refactor code and add comments
 
