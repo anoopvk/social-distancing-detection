@@ -21,7 +21,7 @@
 
 ### In Progress
 
-- [ ] Work on Github Repo [JIRA-345]  
+- [ ] read measurement from user(through some gui?)  
 
 ### Done ✓
 
