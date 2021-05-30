@@ -10,9 +10,9 @@
 
 ### Todo
 
-- [ ] calibration
-   - [ ] draw guide lines
-   - [ ] read measurements from user
+- [x] calibration
+   - [x] draw guide lines
+   - [x] read measurements from user
 - [ ] distance calculation  
   - [ ] coordinate transformation
   - [ ] distance calculation
@@ -24,7 +24,7 @@
 
 ### In Progress
 
-- [ ] read measurement from user(through some gui?)  
+- [x] read measurement from user(through some gui?)  
 
 ### Done ✓
 
