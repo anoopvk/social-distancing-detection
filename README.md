@@ -11,6 +11,7 @@
 ### Todo
 
 - [ ] calibration
+   - [ ] draw guide lines
    - [ ] read measurements from user
 - [ ] distance calculation  
   - [ ] coordinate transformation
