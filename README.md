@@ -10,9 +10,6 @@
 
 ### Todo
 
-- [x] calibration
-   - [x] draw guide lines
-   - [x] read measurements from user
 - [ ] distance calculation  
   - [ ] coordinate transformation
   - [ ] distance calculation
@@ -21,10 +18,11 @@
    - [ ] make tcp call to wifi module 
 - [ ]  create settings.json and read from that
 - [ ]  refactor code and add comments
+- [ ]  display results
 
 ### In Progress
 
-- [x] read measurement from user(through some gui?)  
+ 
 
 ### Done ✓
 
@@ -32,3 +30,6 @@
 - [x] Homography
 - [x] object detection
 - [x] read coordinates from user
+- [x] calibration
+   - [x] draw guide lines
+   - [x] read measurements from user
