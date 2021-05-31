@@ -12,7 +12,7 @@ model.cuda() if torch.cuda.is_available else model.cpu()
 print("running on gpu") if torch.cuda.is_available else (print("running on cpu"))
 
 
-video="test_videos/TownCentre.mp4"
+video="test_videos/test3.mp4"
 # video=1
 
 
@@ -67,7 +67,7 @@ while ret:
     end=time.time()
     print(end-start)
     ret,img=cap.read()
-    ret,img=cap.read()
+    # ret,img=cap.read()
     start=time.time()
 
 
