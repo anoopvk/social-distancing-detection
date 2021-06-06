@@ -10,9 +10,7 @@
 
 ### Todo
 
-- [ ] distance calculation  
-  - [ ] coordinate transformation
-  - [ ] distance calculation
+
 - [ ]  action on social distancing detection
    - [ ] send email
    - [ ] make tcp call to wifi module 
@@ -33,3 +31,6 @@
 - [x] calibration
    - [x] draw guide lines
    - [x] read measurements from user
+- [x] distance calculation  
+  - [x] coordinate transformation
+  - [X] distance calculation
