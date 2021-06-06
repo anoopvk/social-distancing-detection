@@ -25,7 +25,7 @@ model.classes = [0] # 0 for person class
 
 
 def getPedestrianCoordinates(frame):
-    print(".",end="")
+    # print(".",end="")
     # start=time.time()
     res=model(frame)
     # end=time.time()
@@ -34,17 +34,23 @@ def getPedestrianCoordinates(frame):
     framedata=res.pandas().xyxy[0]
     # print(framedata)
     pedestrianbottommids=[]
+    pedestriantopleft=[]
+    pedestrianbottomright=[]
+    
     for detection in range(len(framedata)):
         xmin,ymin,xmax,ymax=framedata["xmin"][detection],framedata["ymin"][detection],framedata["xmax"][detection],framedata["ymax"][detection]
-        drawbox(frame,xmin,ymin,xmax,ymax)
+        # drawbox(frame,xmin,ymin,xmax,ymax)
         pedestrianbottommids.append([int((xmin+xmax)//2),int(ymax//1)])
-        drawpoint(frame,pedestrianbottommids[-1])
+        pedestriantopleft.append([xmin,ymin])
+        pedestrianbottomright.append([xmax,ymax])
+
+        # drawpoint(frame,pedestrianbottommids[-1])
             
 
 
-    cv2.imshow("image",frame)
+    # cv2.imshow("image",frame)
     
-    return pedestrianbottommids
+    return pedestriantopleft,pedestrianbottomright,pedestrianbottommids
 
 def drawbox(image,xmin,ymin,xmax,ymax):
     cv2.rectangle(image,(int(xmin//1),int(ymin//1)),(int(xmax//1),int(ymax//1)),(255,255,255),1)
@@ -53,21 +59,21 @@ def drawpoint(image,center):
     cv2.circle(image, center, 1, (255,255,255), 6)
     cv2.circle(image, center, 1, (100,255,100), 2)
 
-
-cap=cv2.VideoCapture(video)
-ret,img=cap.read()
-start=time.time()
-while ret:
-
-    img=cv2.resize(img,None,fx=0.5,fy=0.5)
-    coord=getPedestrianCoordinates(img)
-    print(coord)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    end=time.time()
-    print(end-start)
+if __name__=="__main__":
+    cap=cv2.VideoCapture(video)
     ret,img=cap.read()
-    # ret,img=cap.read()
     start=time.time()
+    while ret:
+
+        img=cv2.resize(img,None,fx=0.5,fy=0.5)
+        coord=getPedestrianCoordinates(img)
+        print(coord)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+        end=time.time()
+        print(end-start)
+        ret,img=cap.read()
+        # ret,img=cap.read()
+        start=time.time()
 
 

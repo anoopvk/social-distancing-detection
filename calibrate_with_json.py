@@ -181,8 +181,8 @@ def calibrator(video):
 
 
 if __name__=="__main__":
-    # video="test_videos/TownCentre.mp4"
-    video="test_videos/test3.mp4"
+    video="test_videos/TownCentre.mp4"
+    # video="test_videos/test3.mp4"
     # video="test_videos/test.mp4"
 
     calibrator(video)
