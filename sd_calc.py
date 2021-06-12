@@ -7,7 +7,7 @@ import numpy as np
 import cv2 as cv2
 import math
 from itertools import combinations
-
+# from utilties import getSdDistance
 
 # from detecting_person_in_video__clean import getPedestrianCoordinates
 def read_matrix():
@@ -68,40 +68,27 @@ def translate_points(points_input):
     # for i in transformed_points:
     #     print(i[0])
 
-def calc_violations(original_points,transformed_points):
-    sd_violated_points_transformed=[]
-    sd_violated_points_original=[]
+def calc_violations(transformed_points,minDistance):
     violations_index_pairs=[]
 
     if len(transformed_points) >= 2:
         # Iterate over every possible 2 by 2 between the transformed_points combinations 
         list_indexes = list(combinations(range(len(transformed_points)), 2))
-        # print(list_indexes)
         for i in list_indexes:
-            # print(transformed_points[i[0]],transformed_points[i[1]])
             distance=math.sqrt( (transformed_points[i[0]][0] - transformed_points[i[1]][0])**2 + (transformed_points[i[0]][1] - transformed_points[i[1]][1])**2 ) 
 
             #could improve time complexity here
-            if distance < int(200):
+            if distance < int(minDistance):
             
-                # print(points[i[0]],points[i[1]],distance)
                 violations_index_pairs.append([i[0],i[1]])
-                # if list(transformed_points[i[0]]) not in sd_violated_points_transformed:
-                #     sd_violated_points_transformed.append(list(transformed_points[i[0]]))
-                #     sd_violated_points_original.append(list(original_points[i[0]]))
-                # if list(transformed_points[i[1]]) not in sd_violated_points_transformed:
-                #     sd_violated_points_transformed.append(list(transformed_points[i[1]]))
-                #     sd_violated_points_original.append(list(original_points[i[1]]))
 
-    # print(sd_violated_points_transformed)
-    # return sd_violated_points_original,sd_violated_points_transformed
     return violations_index_pairs
     
 
 
-def get_sd_violation_pairs(points_input):
+def get_sd_violation_pairs(points_input,minDistance):
     transformed_points=translate_points(points_input)
-    violations_index_pairs=calc_violations(points_input,transformed_points)
+    violations_index_pairs=calc_violations(transformed_points,minDistance)
     return violations_index_pairs
 
 if __name__=="__main__": 
@@ -109,7 +96,5 @@ if __name__=="__main__":
     points_input=[[138, 360], [227, 164], [294, 143], [232, 352], [264, 227]]
     points_input = np.array(points_input)
     list_points_to_detect = np.float32(points_input).reshape(-1, 1, 2)
-    # translate_points(list_points_to_detect)
-    # calc_violations(points_input)
-    print(get_sd_violation_pairs(points_input))
+   
 

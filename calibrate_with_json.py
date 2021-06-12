@@ -94,8 +94,9 @@ def showtransformedimage(image,h_matrix,outputsize):
 def calibrator(video):
     font = cv2.FONT_HERSHEY_SIMPLEX
     cap=cv2.VideoCapture(video)
-
-    ret,img=cap.read()
+    frameskips=10
+    for i in range(frameskips):
+        ret,img=cap.read()
     ret,img=cap.read()
 
     p=[-1,-1]
@@ -181,7 +182,11 @@ def calibrator(video):
 
 
 if __name__=="__main__":
-    video="test_videos/TownCentre.mp4"
+    # video="test_videos/TownCentre.mp4"
+    with open('settings.json') as f:
+        data = json.load(f)
+
+    video = data["video_input"]
     # video="test_videos/test3.mp4"
     # video="test_videos/test.mp4"
 

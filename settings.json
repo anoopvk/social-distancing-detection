@@ -1,0 +1,14 @@
+{
+ "output_screen_width": 1024,
+ "output_screen_height": 720,
+ "send_mail": 1,
+ "iot_call": 1,
+ "last_mail_time": 1623520837.333166,
+ "email_interval": 60,
+ "threshold_email": 2,
+ "threshold_iot": 5,
+ "save_data": 1,
+ "sd_distance": 150,
+ "critical_desity": -1,
+ "video_input": "test_videos/TownCentre.mp4"
+}
