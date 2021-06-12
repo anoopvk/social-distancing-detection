@@ -11,12 +11,12 @@
 ### Todo
 
 
-- [ ]  action on social distancing detection
-   - [ ] send email
-   - [ ] make tcp call to wifi module 
-- [ ]  create settings.json and read from that
+
 - [ ]  refactor code and add comments
-- [ ]  display results
+- [ ]  multithreading on mail
+- [ ]  calculate critical density from a data.json
+
+
 
 ### In Progress
 
@@ -34,3 +34,9 @@
 - [x] distance calculation  
   - [x] coordinate transformation
   - [X] distance calculation
+ - [X]  action on social distancing detection
+   - [x] send email
+   - [x] make firebase call for wifi module 
+- [x]  display results
+- [x]  create settings.json and read from that
+  
