@@ -13,8 +13,7 @@
 
 
 - [ ]  refactor code and add comments
-- [ ]  multithreading on mail
-- [ ]  calculate critical density from a data.json
+
 
 
 
@@ -39,4 +38,6 @@
    - [x] make firebase call for wifi module 
 - [x]  display results
 - [x]  create settings.json and read from that
+- [x]  multithreading on mail
+- [x]  calculate critical density from a data.json
   
