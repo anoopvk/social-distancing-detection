@@ -1,11 +1,11 @@
 
-from tkinter.constants import NO
+# from tkinter.constants import NO
 import cv2
-import numpy as np
-from learning_stuff.homography import find_homography_matrix
+# import numpy as np
+from modules.homography import find_homography_matrix
 import json
-from width_and_height import get_width_height
-
+from modules.width_and_height import get_width_height
+from modules.utilties import image_resize,getOutputScreenResolution
 
 
 def savetofile(filename,points,measurements,h_matrix,outputsize):
@@ -86,6 +86,14 @@ def showtransformedimage(image,h_matrix,outputsize):
     newimage=cv2.warpPerspective(image,h_matrix,outputsize)
     newimage=cv2.resize(newimage,None,fx=0.5,fy=0.5)
     newimage=cv2.putText(newimage,"press any key to continue",(20,20),font,1,(255,255,255),1)
+    # print(newimage.shape)
+    # print(image.shape)
+    if newimage.shape[0]>newimage.shape[1]:
+        newimage=image_resize(newimage, height = getOutputScreenResolution()[1])
+    else:
+        newimage=image_resize(newimage, width = getOutputScreenResolution()[0])
+
+
     cv2.imshow("bird_eye_view",newimage)
     
     cv2.waitKey(0)
@@ -157,11 +165,13 @@ def calibrator(video):
                 pts=list(points_dict.values())
                 measurements=get_width_height()
                 if not measurements:
+                    cv2.destroyAllWindows()
                     break
                 homography_matrix,outputsize=find_homography_matrix(img,pts,measurements)
                 savetofile(video,pts,measurements,homography_matrix,outputsize)
                 # showtransformedimage(img,homography_matrix,outputsize)
                 # return True
+                cv2.destroyAllWindows()
                 break
 
         if k==ord("t"):
@@ -171,7 +181,8 @@ def calibrator(video):
             current_point_number=0
             points_dict={}
 
-        if k == 27: #escape key
+        if k == 27 or k ==ord("q"): #escape key
+            cv2.destroyAllWindows()
             return False
 
     showtransformedimage(img,homography_matrix,outputsize)
@@ -179,10 +190,7 @@ def calibrator(video):
     # cv2.destroyAllWindows()
     # return points_dict
     
-
-
-if __name__=="__main__":
-    # video="test_videos/TownCentre.mp4"
+def maincalib():
     with open('settings.json') as f:
         data = json.load(f)
 
@@ -191,3 +199,8 @@ if __name__=="__main__":
     # video="test_videos/test.mp4"
 
     calibrator(video)
+    cv2.destroyAllWindows()
+
+if __name__=="__main__":
+    # video="test_videos/TownCentre.mp4"
+    maincalib()
