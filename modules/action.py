@@ -10,7 +10,7 @@ from datetime import date, datetime
 # firebase creating connection
 import firebase_admin
 from firebase_admin import db
-cred_obj = firebase_admin.credentials.Certificate('C:/Users/Anoop/Desktop/btech_project_related/code/learning_stuff/sddetector-firebase-adminsdk-f9k64-b2662e6274.json')
+cred_obj = firebase_admin.credentials.Certificate('C:/Users/Anoop/Desktop/btech_project_related/code_clean/firebaseCredentials/sddetector-firebase-adminsdk-f9k64-b2662e6274.json')
 
 default_app = firebase_admin.initialize_app(cred_obj, {
 	'databaseURL':"https://sddetector-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -24,11 +24,25 @@ receiver_email="anoopthrowaway@gmail.com"
 
 def turnOnSign():
     # 0 for on
-    ref.set({"device1":0})
+    # ref.set({"device1":0})
+    ref.update({"device1":1})
+
 
 def turnOffSign():
     # 1 for off
-    ref.set({"device1":1})
+    # ref.set({"device1":1})
+    ref.update({"device1":0})
+
+def turnOnSign2():
+    # 0 for on
+    # ref.set({"device2":0})
+    ref.update({"device2":1})
+
+
+def turnOffSign2():
+    # 1 for off
+    # ref.set({"device2":1})
+    ref.update({"device2":0})
 
 def sendEmail(sd_violations,numberofpedestrians):
     
@@ -46,11 +60,12 @@ def sendEmail(sd_violations,numberofpedestrians):
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, msg.as_string())
-        print("mail sent!")
+        print("------------------------email sent--------------------")
+        
     
 if __name__=="__main__":
     msg= "hey, the sd violations have crossed the threshold, please do the needful."
     # sendEmail(102,520)
-    # turnOnSign()
-    turnOffSign()
+    turnOnSign()
+    # turnOffSign()
 

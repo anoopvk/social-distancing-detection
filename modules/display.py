@@ -1,12 +1,18 @@
 import cv2
 import numpy as np
+from numpy.core.fromnumeric import shape
 from numpy.lib.arraypad import pad
 from numpy.lib.type_check import imag
 # from utilties import image_resize
-from utilties import *
-import time
+from modules.utilties import *
+# from utilties import *
 
-def get_output_image(input_image,transformationMatrix,transformationOutputsize,pedestrianPos,sdViolationPairs,width,height):
+import time
+from datetime import datetime
+
+def get_output_image(input_image,transformationMatrix,transformationOutputsize,pedestrianPos,sdViolationPairs,sign_status,cd_sign_status,last_mail_time,critical_density,width,height):
+    font_size=0.8
+    
     # start=time.time()
     # print(transformationMatrix,pedestrianPos,sdViolationPairs,width,height)
     top_left,bottom_right,bottom_mid_coord=pedestrianPos
@@ -20,12 +26,15 @@ def get_output_image(input_image,transformationMatrix,transformationOutputsize,p
 
     # plotting rectangle for each pedestrian
     for i in range(len(bottom_mid_coord)):
-        cv2.rectangle(org_img,(int(top_left[i][0]//1),int(top_left[i][1]//1)),(int(bottom_right[i][0]//1),int(bottom_right[i][1]//1)),(255,255,255),1)
+        # cv2.rectangle(org_img,(int(top_left[i][0]//1),int(top_left[i][1]//1)),(int(bottom_right[i][0]//1),int(bottom_right[i][1]//1)),(255,255,255),1)
+        cv2.rectangle(org_img,(int(top_left[i][0]//1),int(top_left[i][1]//1)),(int(bottom_right[i][0]//1),int(bottom_right[i][1]//1)),(0,255,0),2)
         cv2.circle(org_img, bottom_mid_coord[i], 2, (255,255,255), 10)
         cv2.circle(org_img, bottom_mid_coord[i], 2, (100,255,100), 5)
     
     # draw lines between sd violators and red circle
     for i in sdViolationPairs:
+        cv2.rectangle(org_img,(int(top_left[i[0]][0]//1),int(top_left[i[0]][1]//1)),(int(bottom_right[i[0]][0]//1),int(bottom_right[i[0]][1]//1)),(0,0,255),2)
+        cv2.rectangle(org_img,(int(top_left[i[1]][0]//1),int(top_left[i[1]][1]//1)),(int(bottom_right[i[1]][0]//1),int(bottom_right[i[1]][1]//1)),(0,0,255),2)
         cv2.line(org_img,bottom_mid_coord[i[0]],bottom_mid_coord[i[1]],(0,0,255),3)
         cv2.circle(org_img, bottom_mid_coord[i[0]], 3, (0,0,255), 15)
         cv2.circle(org_img, bottom_mid_coord[i[1]], 3, (0,0,255), 15)
@@ -83,13 +92,121 @@ def get_output_image(input_image,transformationMatrix,transformationOutputsize,p
     # cv2.waitKey(0)
     # print(time.time()-start)
     # cv2.putText(output_image,"number of sd violations = "+str(len(sdViolationPairs)),(padding,new_width+(50)),cv2.FONT_HERSHEY_SIMPLEX,0.7,(0,0,0),2)
-    cv2.putText(output_image,"number of sd violations = "+str(len(sdViolationPairs)),(padding,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,1,(0,0,0),1)
-    cv2.putText(output_image,"number of pedestrians detected = "+str(len(bottom_mid_coord)),(padding,new_width+(15*padding)),cv2.FONT_HERSHEY_DUPLEX,1,(0,0,0),1)
+    cv2.putText(output_image,"number of sd violations = "+str(len(sdViolationPairs)),(padding,new_width+(5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+    cv2.putText(output_image,"number of pedestrians detected = "+str(len(bottom_mid_coord)),(padding,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+    if critical_density>0:
+        cv2.putText(output_image,"critical density = "+str(critical_density),(padding,new_width+(15*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+    
 
+
+    signcolor=(0,255,0) if sign_status=="on" else (0,0,255)
+    cv2.putText(output_image,"sign status = ",(output_image.shape[1]//2,new_width+(5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+    # cv2.putText(output_image,str(sign_status),(output_image.shape[1]//2 + 235,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,1,(0,0,0),3)
+    cv2.putText(output_image,str(sign_status),(output_image.shape[1]//2 + 185,new_width+(5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,signcolor,2)
+
+    cd_signcolor=(0,255,0) if cd_sign_status=="on" else (0,0,255)
+    cv2.putText(output_image,"cd_sign status = ",(output_image.shape[1]//2,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+    # cv2.putText(output_image,str(cd_sign_status),(output_image.shape[1]//2 + 235,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,1,(0,0,0),3)
+    cv2.putText(output_image,str(cd_sign_status),(output_image.shape[1]//2 + 235,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,cd_signcolor,2)
+
+    
+    if last_mail_time>0:
+        # cv2.putText(output_image,"last mail sent = "+str(datetime.utcfromtimestamp(last_mail_time+19800).strftime('%Y/%m/%d %H:%M:%S')),(output_image.shape[1]//2,new_width+(10*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+        cv2.putText(output_image,"last mail sent = "+str(datetime.utcfromtimestamp(last_mail_time+19800).strftime('%d/%m/%y %H:%M:%S')),(output_image.shape[1]//2,new_width+(15*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,(0,0,0),1)
+
+    
     return output_image
 
 
+def get_output_image_light(input_image,pedestrianPos,sdViolationPairs,sign_status,cd_sign_status,last_mail_time,critical_density,width,height):
+    font_size=1
+    
+    top_left,bottom_right,bottom_mid_coord=pedestrianPos
+    padding=5
+    # output_image = np.zeros((height,width,3), np.uint8)
+    # output_image[:,:] = (255,255,255)
+    # org_img=input_image.copy()
+    org_img=input_image
 
+
+    # plotting rectangle for each pedestrian
+    for i in range(len(bottom_mid_coord)):
+        # cv2.rectangle(org_img,(int(top_left[i][0]//1),int(top_left[i][1]//1)),(int(bottom_right[i][0]//1),int(bottom_right[i][1]//1)),(255,255,255),1)
+        cv2.rectangle(org_img,(int(top_left[i][0]//1),int(top_left[i][1]//1)),(int(bottom_right[i][0]//1),int(bottom_right[i][1]//1)),(0,255,0),2)
+        cv2.circle(org_img, bottom_mid_coord[i], 2, (255,255,255), 10)
+        cv2.circle(org_img, bottom_mid_coord[i], 2, (100,255,100), 5)
+    
+    # draw lines between sd violators and red circle
+    for i in sdViolationPairs:
+        cv2.rectangle(org_img,(int(top_left[i[0]][0]//1),int(top_left[i[0]][1]//1)),(int(bottom_right[i[0]][0]//1),int(bottom_right[i[0]][1]//1)),(0,0,255),2)
+        cv2.rectangle(org_img,(int(top_left[i[1]][0]//1),int(top_left[i[1]][1]//1)),(int(bottom_right[i[1]][0]//1),int(bottom_right[i[1]][1]//1)),(0,0,255),2)
+        cv2.line(org_img,bottom_mid_coord[i[0]],bottom_mid_coord[i[1]],(0,0,255),3)
+        cv2.circle(org_img, bottom_mid_coord[i[0]], 3, (0,0,255), 15)
+        cv2.circle(org_img, bottom_mid_coord[i[1]], 3, (0,0,255), 15)
+
+
+
+
+
+
+
+    # old_width=org_img.shape[1] +
+    r1=width/org_img.shape[1]
+    r2=height/org_img.shape[0]
+    if r1<r2:
+        org_img=image_resize(org_img,width=width)
+    else:
+        org_img=image_resize(org_img,height=height)
+
+
+    line_number=1
+    text_thickness=2
+    black=(0,0,0)
+    white=(255,255,255)
+    outsidecolor=black
+    cv2.putText(org_img,"number of sd violations = "+str(len(sdViolationPairs)),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,outsidecolor,text_thickness)
+    line_number+=1
+    cv2.putText(org_img,"number of pedestrians detected = "+str(len(bottom_mid_coord)),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,outsidecolor,text_thickness)
+    line_number+=1
+    if critical_density>0:
+        cv2.putText(org_img,"critical density = "+str(critical_density),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,outsidecolor,text_thickness)
+        line_number+=1
+    # signcolor=(0,255,0) if sign_status=="on" else (0,0,255)
+    cv2.putText(org_img,"sign status = ",(padding,line_number*5*padding),cv2.FONT_HERSHEY_DUPLEX,font_size,outsidecolor,text_thickness)
+    # cv2.putText(org_img,str(sign_status),(padding + 185,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,signcolor,text_thickness)
+    line_number+=1
+    cv2.putText(org_img,"cd sign status = ",(padding,line_number*5*padding),cv2.FONT_HERSHEY_DUPLEX,font_size,outsidecolor,text_thickness)
+    # cv2.putText(org_img,str(sign_status),(padding + 185,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,signcolor,text_thickness)
+    line_number+=1
+    if last_mail_time>0:
+        cv2.putText(org_img,"last mail sent = "+str(datetime.utcfromtimestamp(last_mail_time+19800).strftime('%d/%m/%y %H:%M:%S')),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,outsidecolor,text_thickness)
+        line_number+=1
+
+    line_number=1
+    text_thickness=1
+
+    insidecolor=white
+
+    cv2.putText(org_img,"number of sd violations = "+str(len(sdViolationPairs)),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,insidecolor,text_thickness)
+    line_number+=1
+    cv2.putText(org_img,"number of pedestrians detected = "+str(len(bottom_mid_coord)),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,insidecolor,text_thickness)
+    line_number+=1
+    if critical_density>0:
+        cv2.putText(org_img,"critical density = "+str(critical_density),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,insidecolor,text_thickness)
+        line_number+=1
+    signcolor=(0,255,0) if sign_status=="on" else (0,0,255)
+    cv2.putText(org_img,"sign status = "+str(sign_status),(padding,line_number*5*padding),cv2.FONT_HERSHEY_DUPLEX,font_size,insidecolor,text_thickness)
+    cv2.putText(org_img,str(sign_status),(padding + 235,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,signcolor,text_thickness+1)
+    line_number+=1
+    cd_signcolor=(0,255,0) if cd_sign_status=="on" else (0,0,255)
+    cv2.putText(org_img,"cd sign status = "+str(cd_sign_status),(padding,line_number*5*padding),cv2.FONT_HERSHEY_DUPLEX,font_size,insidecolor,text_thickness)
+    cv2.putText(org_img,str(cd_sign_status),(padding + 290,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,cd_signcolor,text_thickness+1)
+    line_number+=1
+    if last_mail_time>0:
+        cv2.putText(org_img,"last mail sent = "+str(datetime.utcfromtimestamp(last_mail_time+19800).strftime('%d/%m/%y %H:%M:%S')),(padding,(line_number*5*padding)),cv2.FONT_HERSHEY_DUPLEX,font_size,insidecolor,text_thickness)
+        line_number+=1
+    
+    return org_img
 
     
 
@@ -117,7 +234,14 @@ if __name__=="__main__":
     sd_viol=[[0, 10], [1, 11], [2, 9], [3, 5]]
 
     # a=get_output_image(img,h_matrix,getOutputsize(),[tl,br,mid],sd_viol,1024,720)
-    a=get_output_image(img,h_matrix,getOutputsize(),[tl,br,mid],sd_viol,1366,768)
+    start=time.time()
 
+    # a=get_output_image(img,h_matrix,getOutputsize(),[tl,br,mid],sd_viol,"off",12,14,1366,768)
+    a=get_output_image(img,h_matrix,getOutputsize(),[tl,br,mid],sd_viol,"off","on",12,14,1024,720)
+
+    # b=get_output_image_light(img,[tl,br,mid],sd_viol,"off","on",12,14,2000,500)
     cv2.imshow("a",a)
+    # cv2.imshow("b",b)
+    # print(time.time()-start)
+
     cv2.waitKey(0)

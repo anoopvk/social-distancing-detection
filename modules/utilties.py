@@ -82,13 +82,31 @@ def getSaveDataIsOn():
 
     return data["save_data"]
 
+def getShowOutputFlag():
+    with open('settings.json') as f:
+        data = json.load(f)
+
+    return data["showOutputFlag"]
+
+def getShowOutputLightFlag():
+    with open('settings.json') as f:
+        data = json.load(f)
+
+    return data["showOutputLightFlag"]
+
+def getOutputScreenResolution():
+    with open('settings.json') as f:
+        data = json.load(f)
+
+    return data["output_screen_width"],data["output_screen_height"]
+
 def saveData(sd_count,pedestrian_count):
     with open('data.json') as f:
         data = json.load(f)
 
     data["sdviolations"].append(sd_count)
     data["numberofpedestrians"].append(pedestrian_count)
-
+    data["timestamp"].append(time.time())
     json_object = json.dumps(data,indent=1)
 
     with open("data.json", "w") as outfile:
@@ -97,7 +115,8 @@ def saveData(sd_count,pedestrian_count):
 def resetSavedData():
     data={
     "sdviolations":[],
-    "numberofpedestrians":[]
+    "numberofpedestrians":[],
+    "timestamp":[]
     }
     json_object = json.dumps(data,indent=1)
     with open("data.json", "w") as outfile:
