@@ -1,7 +1,7 @@
 # social-distancing-detection
 
 
-#Screenshots
+# Screenshots
 ![Screenshot 2021-06-30 183220](https://user-images.githubusercontent.com/60844255/123975279-d4ba2900-d9da-11eb-9544-4d734996f513.jpg)
 ![Screenshot 2021-06-30 183238](https://user-images.githubusercontent.com/60844255/123975278-d4ba2900-d9da-11eb-8b0f-d2676b016ae9.jpg)
 ![Screenshot 2021-06-30 183253](https://user-images.githubusercontent.com/60844255/123975267-d2f06580-d9da-11eb-9a78-79a22e8e8a5c.jpg)
